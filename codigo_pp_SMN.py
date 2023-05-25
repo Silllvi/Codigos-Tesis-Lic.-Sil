@@ -22,7 +22,7 @@ sbn.set() # Setting seaborn as default style even if use only matplotlib
 
 #estamos probando git
 #cambio una cosita mas
-
+#cambio una cosita mas desde spyder
 #%%
 directorio = 'data_set'
 archivo= 'ppSMN.csv'
