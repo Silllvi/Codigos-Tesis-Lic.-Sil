@@ -1,0 +1,155 @@
+Precipitaciones Diarias (mm) 
+Estación Meteorológica   Ezeiza Aero
+Año 2020 Precipitaciones Diarias (mm) 
+Datos Preliminares
+ 
+Día;May;Jun;Jul;Ago;Sep;Oct;Nov;Dic;
+1;S/P;S/P;S/P;S/P;7,0;S/P;S/P;S/P;
+2;S/P;S/P;S/P;S/P;22,0;S/P;S/P;14,0;
+3;0,3;S/P;S/P;S/P;S/P;S/P;S/P;S/P;
+4;2,0;S/P;0,3;S/P;S/P;0,3;S/P;S/P;
+5;<0.1;<0.1;S/P;S/P;S/P;S/P;S/P;S/P;
+6;S/P;0,8;S/P;1,0;S/P;S/P;S/P;S/P;
+7;S/P;1,0;S/P;<0.1;S/P;S/P;S/P;S/P;
+8;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;
+9;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;
+10;S/P;S/P;S/P;S/P;S/P;<0.1;S/P;<0.1;
+11;S/P;S/P;S/P;S/P;<0.1;S/P;S/P;0,7;
+12;S/P;S/P;S/P;S/P;S/P;S/P;S/P;4,0;
+13;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;
+14;S/P;S/P;S/P;S/P;S/P;S/P;<0.1;<0.1;
+15;S/P;0,2;S/P;S/P;<0.1;S/P;S/P;S/P;
+16;S/P;S/P;2,0;S/P;S/P;S/P;S/P;S/P;
+17;S/P;24,5;S/P;S/P;S/P;5,0;S/P;S/P;
+18;S/P;S/P;S/P;S/P;S/P;S/P;S/P;<0.1;
+19;S/P;S/P;S/P;0,2;S/P;63,6;S/P;S/P;
+20;5,0;13,0;S/P;S/P;S/P;<0.1;S/P;S/P;
+21;<0.1;S/P;2,0;S/P;S/P;18,0;S/P;S/P;
+22;S/P;1,0;2,0;S/P;S/P;6,0;S/P;S/P;
+23;S/P;<0.1;2,0;S/P;S/P;<0.1;S/P;S/P;
+24;S/P;0,2;S/P;S/P;4,0;S/P;27,0;S/P;
+25;S/P;S/P;S/P;17,0;35,0;11,0;S/P;S/P;
+26;S/P;S/P;S/P;2,0;8,0;S/P;S/P;S/P;
+27;S/P;S/P;S/P;S/P;0,2;S/P;S/P;S/P;
+28;S/P;S/P;S/P;<0.1;S/P;<0.1;7,0;0,6;
+29;S/P;14,0;S/P;1,0;S/P;S/P;S/P;5,0;
+30;S/P;14,0;S/P;S/P;S/P;S/P;S/P;<0.1;
+31;S/P;;S/P;S/P;;S/P;;S/P;
+Total;    7,3;   68,7;    8,3;   21,2;   76,2;  103,9;   34,0;   24,3;
+ 
+Precipitaciones Diarias (mm) 
+Estación Meteorológica   Ezeiza Aero
+Año 2021 Precipitaciones Diarias (mm) 
+Datos Preliminares
+ 
+Día;Ene;Feb;Mar;Abr;May;Jun;Jul;Ago;Sep;Oct;Nov;Dic;
+1;S/P;2,0;S/P;S/P;S/P;<0.1;S/P;S/P;27,0;S/P;3,0;S/P;
+2;S/P;<0.1;S/P;S/P;S/P;S/P;S/P;S/P;<0.1;5,0;0,2;S/P;
+3;S/P;<0.1;S/P;S/P;12,0;S/P;S/P;S/P;S/P;S/P;0,2;<0.1;
+4;S/P;S/P;S/P;S/P;S/P;<0.1;S/P;S/P;4,0;S/P;<0.1;3,0;
+5;31,0;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;5,0;
+6;S/P;S/P;S/P;S/P;S/P;S/P;6,0;S/P;2,0;S/P;<0.1;S/P;
+7;S/P;2,0;S/P;S/P;S/P;S/P;3,0;S/P;19,0;S/P;S/P;S/P;
+8;S/P;<0.1;S/P;28,0;S/P;<0.1;S/P;37,0;33,3;S/P;S/P;S/P;
+9;<0.1;2,0;S/P;2,0;S/P;S/P;S/P;<0.1;0,2;S/P;S/P;<0.1;
+10;34,0;<0.1;S/P;9,0;S/P;S/P;S/P;S/P;<0.1;<0.1;S/P;S/P;
+11;6,0;<0.1;S/P;S/P;S/P;S/P;5,0;S/P;S/P;<0.1;S/P;S/P;
+12;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;<0.1;S/P;0,1;
+13;S/P;5,2;S/P;S/P;S/P;S/P;S/P;S/P;S/P;0,4;28,0;S/P;
+14;<0.1;0,5;S/P;S/P;S/P;S/P;0,2;S/P;S/P;S/P;S/P;0,2;
+15;<0.1;S/P;0,1;S/P;S/P;S/P;S/P;S/P;S/P;S/P;<0.1;S/P;
+16;0,4;S/P;4,0;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;
+17;S/P;S/P;<0.1;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;
+18;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;
+19;S/P;S/P;20,0;S/P;<0.1;S/P;S/P;S/P;<0.1;S/P;S/P;S/P;
+20;S/P;S/P;10,0;S/P;1,0;S/P;S/P;S/P;<0.1;S/P;S/P;<0.1;
+21;S/P;33,5;S/P;S/P;55,0;S/P;S/P;S/P;S/P;S/P;S/P;S/P;
+22;S/P;18,0;<0.1;S/P;2,0;S/P;S/P;S/P;1,0;15,0;S/P;S/P;
+23;S/P;S/P;S/P;19,0;S/P;2,0;S/P;S/P;S/P;S/P;S/P;S/P;
+24;S/P;S/P;16,0;S/P;S/P;S/P;13,0;S/P;S/P;S/P;<0.1;3,0;
+25;S/P;S/P;16,0;S/P;S/P;S/P;S/P;S/P;S/P;S/P;9,0;S/P;
+26;S/P;S/P;2,0;S/P;S/P;0,2;S/P;S/P;<0.1;S/P;S/P;S/P;
+27;3,0;S/P;<0.1;S/P;S/P;0,5;S/P;S/P;<0.1;S/P;21,0;S/P;
+28;5,0;S/P;<0.1;S/P;S/P;S/P;S/P;S/P;S/P;S/P;37,1;S/P;
+29;<0.1;;<0.1;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;
+30;12,0;;S/P;S/P;S/P;S/P;S/P;S/P;15,0;<0.1;S/P;S/P;
+31;5,0;;S/P;;S/P;;S/P;<0.1;;<0.1;;<0.1;
+Total;   96,4;   63,2;   68,1;   58,0;   70,0;    2,7;   27,2;   37,0;  101,5;   20,4;   98,5;   11,3;
+ 
+Estación Meteorológica   Ezeiza Aero
+Año 2022 Precipitaciones Diarias (mm) 
+Datos Preliminares
+ 
+Día;Ene;Feb;Mar;Abr;May;Jun;Jul;Ago;Sep;Oct;Nov;Dic;
+1;0,5;S/P;S/P;S/P;S/P;S/P;0,5;S/P;0,4;S/P;S/P;S/P;
+2;S/P;9,0;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;
+3;S/P;2,0;S/P;0,5;S/P;S/P;S/P;<0.1;S/P;S/P;S/P;S/P;
+4;S/P;13,0;0,1;S/P;S/P;S/P;<0.1;S/P;S/P;S/P;S/P;S/P;
+5;S/P;0,5;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;
+6;S/P;0,2;19,0;S/P;S/P;S/P;1,0;S/P;S/P;S/P;S/P;S/P;
+7;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;<0.1;S/P;4,0;
+8;S/P;S/P;6,0;S/P;S/P;S/P;0,2;<0.1;2,8;<0.1;S/P;S/P;
+9;S/P;S/P;7,0;S/P;S/P;S/P;0,1;<0.1;S/P;S/P;S/P;9,0;
+10;S/P;S/P;S/P;12,0;S/P;S/P;<0.1;S/P;S/P;S/P;S/P;S/P;
+11;S/P;0,1;S/P;0,4;S/P;S/P;S/P;S/P;S/P;S/P;S/P;<0.1;
+12;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;<0.1;
+13;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;15,0;S/P;
+14;S/P;S/P;S/P;S/P;S/P;S/P;S/P;2,0;S/P;S/P;S/P;5,0;
+15;22,5;S/P;S/P;S/P;<0.1;S/P;<0.1;S/P;S/P;1,0;S/P;S/P;
+16;1,0;S/P;S/P;S/P;<0.1;S/P;S/P;S/P;S/P;S/P;S/P;S/P;
+17;<0.1;S/P;5,0;<0.1;S/P;S/P;S/P;0,5;S/P;S/P;S/P;S/P;
+18;32,6;S/P;2,0;S/P;S/P;S/P;S/P;S/P;<0.1;S/P;S/P;S/P;
+19;<0.1;5,0;S/P;S/P;S/P;S/P;S/P;S/P;S/P;0,1;<0.1;S/P;
+20;38,0;3,0;<0.1;0,9;S/P;S/P;S/P;S/P;1,0;S/P;<0.1;S/P;
+21;4,0;S/P;4,0;1,0;S/P;S/P;S/P;S/P;S/P;5,0;<0.1;S/P;
+22;14,0;S/P;S/P;0,2;S/P;S/P;S/P;S/P;0,5;S/P;S/P;0,5;
+23;S/P;4,0;35,0;S/P;S/P;S/P;0,5;S/P;S/P;S/P;S/P;10,8;
+24;S/P;7,0;0,7;28,0;27,0;S/P;0,3;S/P;S/P;S/P;S/P;<0.1;
+25;10,0;0,5;2,0;<0.1;0,5;S/P;6,0;S/P;S/P;2,0;S/P;S/P;
+26;2,0;44,2;S/P;12,0;S/P;S/P;13,0;0,8;S/P;0,2;S/P;S/P;
+27;S/P;4,0;S/P;S/P;S/P;S/P;2,0;S/P;S/P;S/P;S/P;S/P;
+28;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;S/P;<0.1;S/P;S/P;
+29;S/P;;S/P;S/P;S/P;S/P;S/P;S/P;S/P;<0.1;S/P;S/P;
+30;S/P;;S/P;S/P;S/P;S/P;S/P;S/P;S/P;1,0;42,0;S/P;
+31;S/P;;S/P;;S/P;;S/P;S/P;;S/P;;S/P;
+Total;  124,6;   92,5;   80,8;   55,0;   27,5;;   23,6;    3,3;    4,7;    9,3;   57,0;   29,3;
+ 
+Precipitaciones Diarias (mm) 
+Estación Meteorológica   Ezeiza Aero
+Año 2023 Precipitaciones Diarias (mm) 
+Datos Preliminares
+ 
+Día;Ene;Feb;
+1;11,0;S/P;
+2;S/P;<0.1;
+3;S/P;0,4;
+4;S/P;S/P;
+5;S/P;S/P;
+6;S/P;S/P;
+7;S/P;S/P;
+8;S/P;1,0;
+9;S/P;S/P;
+10;S/P;S/P;
+11;<0.1;S/P;
+12;S/P;<0.1;
+13;S/P;4,8;
+14;S/P;S/P;
+15;S/P;S/P;
+16;S/P;2,0;
+17;S/P;0,2;
+18;0,1;S/P;
+19;S/P;S/P;
+20;14,0;S/P;
+21;S/P;S/P;
+22;<0.1;S/P;
+23;S/P;S/P;
+24;S/P;2,0;
+25;<0.1;S/P;
+26;15,0;S/P;
+27;5,0;S/P;
+28;S/P;S/P;
+29;S/P;;
+30;S/P;;
+31;S/P;;
+Total;   45,1;   10,4;
+ 
