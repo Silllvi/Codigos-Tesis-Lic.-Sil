@@ -21,6 +21,7 @@ register_matplotlib_converters()
 sbn.set() # Setting seaborn as default style even if use only matplotlib
 
 #estamos probando git
+#cambio una cosita mas
 
 #%%
 directorio = 'data_set'
