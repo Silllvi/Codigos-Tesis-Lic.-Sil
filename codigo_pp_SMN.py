@@ -20,6 +20,8 @@ from matplotlib.ticker import MultipleLocator
 register_matplotlib_converters()
 sbn.set() # Setting seaborn as default style even if use only matplotlib
 
+#estamos probando git
+
 #%%
 directorio = 'data_set'
 archivo= 'ppSMN.csv'
