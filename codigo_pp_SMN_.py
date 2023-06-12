@@ -287,61 +287,6 @@ plt.tight_layout()
 
 plt.show()
 #queda acomodaa titulos, ylabel, mejorar visualizacion
-#%%
-
-plt.style.use("fivethirtyeight")
-
-fig, axes = plt.subplots(figsize = (35,20), nrows=3, ncols=1, sharey=True, dpi= 100)
-fig.suptitle('Ezeiza SMN - Serie de precipitación diaria\nEnero 1961 - Marzo 2023', fontsize= 28)
-# Set the plot line width
-line_width = 1.8
-#add DataFrames to subplots
-primer_tramo.plot(ax=axes[0], lw=line_width, ylim=[0, 130], grid= True, legend= False,
-                  yticks=np.arange(0, 125, 15), color='blue',
-                  marker = 'o',
-                  alpha=0.6)
-segundo_tramo.plot(ax=axes[1], lw=line_width, ylim=[0, 130], grid= True, legend= False,
-                   yticks=np.arange(0, 125, 15), color='blue',
-                   marker = 'o',
-                   alpha=0.6)
-tercer_tramo.plot(ax=axes[2], lw=line_width, ylim=[0, 130], grid= True, legend= False,
-                  yticks=np.arange(0, 125, 25), color='blue',
-                  marker = 'o',
-                  alpha=0.6)
-
-plt.tight_layout()
-
-# Axis labels
-axes[0].set_xlabel(" ")
-axes[0].tick_params(axis='both',labelsize=22)
-axes[1].set_xlabel(" ")
-axes[1].set_ylabel("Precipitación diaria [mm]", fontsize= 26)
-axes[1].tick_params(axis='both',labelsize=24)
-axes[2].set_xlabel("Años", fontsize= 26)
-axes[2].tick_params(axis='both',labelsize=24)
-
-'''axes[0].xaxis.set_major_locator(mdates.MonthLocator(interval=12))
-axes[1].xaxis.set_major_locator(mdates.MonthLocator(interval=12))
-axes[2].xaxis.set_major_locator(mdates.MonthLocator(interval=12))'''
-
-axes[0].xaxis.set_major_locator(MultipleLocator(731))
-axes[0].xaxis.set_minor_locator(MultipleLocator(365))
-axes[1].xaxis.set_major_locator(MultipleLocator(731))
-axes[1].xaxis.set_minor_locator(MultipleLocator(365))
-axes[2].xaxis.set_major_locator(MultipleLocator(731))
-axes[2].xaxis.set_minor_locator(MultipleLocator(365))
-# Define the date format
-date_form = DateFormatter("%Y-%m")
-axes[0].xaxis.set_major_formatter(date_form)
-axes[1].xaxis.set_major_formatter(date_form)
-axes[2].xaxis.set_major_formatter(date_form)
-# Set x-limits
-
-
-#axes[1].set_xlim([datetime.date(1982, 1,1), datetime.date(2000, 1,1)])
-
-plt.show()
-
 
 #%%
 '''
@@ -359,52 +304,16 @@ DatetimeIndex: 10958 entries, 1991-01-02 12:00:00 to 2021-01-01 12:00:00
 '''
 nan_rows_clima = (df_climatologia[df_climatologia.isnull().any(1)]) 
 print(nan_rows_clima) #14 Nan's
-#%%
-'''plotting SERIE CLIMATOLOGICA ---> YA LO HICE CON LA SERIE COMPLETA 
-# Handle date time conversions between pandas and matplotlib
-from pandas.plotting import register_matplotlib_converters
-from matplotlib.ticker import MultipleLocator
-register_matplotlib_converters()
-# Use white grid plot background from seaborn
-sbn.set(font_scale=1.8, style="whitegrid")
 
-# Create figure and plot space
-fig, ax = plt.subplots(figsize=(30, 10), facecolor='lavender')
-
-# Add x-axis and y-axis
-ax.plot(df_climatologia.index,
-       df_climatologia['prcp'],
-       color='m',
-       marker = 'o',
-       alpha=0.6)
-
-ax.xaxis.set_major_locator(MultipleLocator(731))
-ax.xaxis.set_minor_locator(MultipleLocator(365))
-# Set title and labels for axes
-ax.set(xlabel="Años",
-       ylabel="Precipitación diaria (mm)",
-       title="Serie climatológica de precipitación diaria (mm) - Ezeiza Aero", 
-       xlim=["1991", "2021"])
-
-plt.setp(ax.get_xticklabels(), rotation = 45)     
-
-# Define the date format
-date_form = DateFormatter("%Y")
-ax.xaxis.set_major_formatter(date_form)
-plt.show()
-
-#otra manera de visualizar lo mismo
-plt.figure(figsize=(18,6))
-plt.plot(df_climatologia.index, df_climatologia['prcp'], linewidth=0.3)
-plt.ylabel('Precipitación diaria (mm)', fontsize=14)
-plt.title('Serie climatológica de precipitación diaria (mm) - Ezeiza Aero', fontsize=16)
-plt.savefig('serie_climatologica_pp.png')
-plt.show()'''
 #%%
 '''PARA PERCENTILES VOY A CONSIDERAR SOLO LOS DIAS CON LLUVIA'''
 
 f_dfclima = df_climatologia[df_climatologia['prcp']!=0]  #2666 rows
-
+f_dfclima.describe()
+f_dfclima_p75=f_dfclima[f_dfclima['prcp']>=15]
+f_dfclima_p75=f_dfclima_p75.asfreq("D")
+#calculo pm trimestral para valores mayores o iguales a P75
+pm_trim_p75=f_dfclima_p75['prcp'].rolling(90, min_periods=1).mean().shift(1)
 
 #%%
 '''
