@@ -311,14 +311,32 @@ print(nan_rows_clima) #14 Nan's
 f_dfclima = df_climatologia[df_climatologia['prcp']!=0]  #2666 rows
 f_dfclima.describe()
 f_dfclima_p75=f_dfclima[f_dfclima['prcp']>=15]
-f_dfclima_p75=f_dfclima_p75.asfreq("D")
-#calculo pm trimestral para valores mayores o iguales a P75
-pm_trim_p75=f_dfclima_p75['prcp'].rolling(90, min_periods=1).mean().shift(1)
+f_dfclima_p75[['prcp']].plot(figsize=(30, 8), fontsize=12) #sin nan, sin frec diaria, solo datos de pp
 
+f_dfclima_p75=f_dfclima_p75.asfreq("D") #solo para el calculo del pm
+#calculo pm trimestral para valores mayores o iguales a P75()
+pm_trim_p75=f_dfclima_p75['prcp'].rolling(90, min_periods=4).mean().shift(89)
+f_dfclima_p75=f_dfclima[f_dfclima['prcp']>=15] #vuelvo atras para la grafica continua
+#f_dfclima_p75[['prcp', 'pm_trimestral_p75']].plot(figsize=(20, 8), fontsize=12)
+plt.figure(figsize=(40, 12))
+plt.plot(f_dfclima_p75.index, f_dfclima_p75['prcp'], label='precipitacion diaria')
+plt.plot(pm_trim_p75, label='promedio movil 90D', color='blue')
+plt.title('Precipitación diaria igual o mayor a 15 mm (Percentil 75) y promedio movil de 90 días')
+plt.ylabel('Precipitación (mm)', fontsize=14)
+plt.xlabel('Años', fontsize=16)
+plt.tick_params(axis='both',labelsize=18)
+plt.legend(fontsize=14)
+date_form = DateFormatter("%Y-%m")
+plt.gca().xaxis.set_major_formatter(date_form)
+plt.xlim("1991-01", "2019-12")
+locator=ticker.MultipleLocator(base=365)
+plt.gca().xaxis.set_major_locator(locator)
+plt.xticks(rotation=45)
+plt.show()
 #%%
 '''
 
-#PROMEDIO MOVIL
+#PROMEDIO MOVIL ANUAL
 
 '''
 f_dfclima_pm=f_dfclima.asfreq("D")
@@ -421,6 +439,38 @@ promedio_trimestral=f_dfclima.groupby(f_dfclima['Fecha'].dt.quarter).mean().roun
 estadistico_trimestral=f_dfclima.groupby(f_dfclima['Fecha'].dt.quarter).agg(['mean',
                                                                              'std', 'min', 'max']).round(1)
 percentiles_trimestral= f_dfclima.groupby(f_dfclima['Fecha'].dt.quarter).quantile([0.25, 0.5, 0.75, 0.9, 0.95, 0.99]).round(1)
+
+#hago un df con valores estadisticos para cada estacion y luego grafico
+#creo un diccionario con los datos de las columnas
+
+data={'estación': ['verano', 'otoño', 'invierno', 'primavera'], 'media': [13.9, 10.2, 9.2, 12.1], 'Std': [17.1, 14.8, 12.5, 15.9],
+      'P75': [19, 13.5, 12, 16.1], 'P95': [52.4, 39.9, 33.8, 45.2],
+      'Máx': [105, 120.3, 74, 101]}
+
+estadisticos_trimestres = pd.DataFrame(data)
+estadisticos_trimestres=estadisticos_trimestres.set_index('estación')
+columnas=estadisticos_trimestres.columns
+num_barras = len(columnas)
+ancho_barras = 0.8
+indice=estadisticos_trimestres.index
+colores = ['orange', 'red', 'green', 'blue']
+
+estadisticos_trimestres.plot(kind='bar', figsize=(12,8))
+
+# Configurar el título y las etiquetas de los ejes
+plt.title('Ezeiza SMN- Estadísticos según estaciónes del año- 1991-2020')
+plt.xlabel('Estación del año')
+plt.ylabel('Precipitación diaria (mm)')
+
+# Configurar las etiquetas del eje x
+#plt.xticks(indice + (num_barras - 1) * ancho_barras / 2, indice)
+
+# Mostrar la leyenda
+plt.legend(columnas, fontsize=12)
+
+# Mostrar el gráfico
+plt.show()
+
 #%%
 ''' PROMEDIO MENSUAL PARA LA SERIE CLIMATOLOGICA 1991-2020'''
 meses=f_dfclima.resample('M').sum() #acumulados para cada mes
