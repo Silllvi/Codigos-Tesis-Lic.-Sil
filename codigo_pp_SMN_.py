@@ -213,78 +213,58 @@ plt.show()
 #%%
 '''Para visulizarla mejor se va a partir la serie total en 3'''
 
-primer_tramo=f_solo_lluvia.loc['1961-01-02':'1981-01-01'] 
-segundo_tramo= f_solo_lluvia.loc['1981-01-02':'2001-01-01'] 
-tercer_tramo= f_solo_lluvia.loc['2001-01-02':'2021-01-01'] 
-cuarto_tramo= f_solo_lluvia.loc['2021-01-02':'2023-03-20'] 
-
-#creo un df de nan para agregarlo a cuartad de datos que los otros subplots
-ix=pd.date_range(start='20230321', end='20410101', freq='D')
-extension= pd.DataFrame()
-extension['Fecha'] =pd.to_datetime(ix,format ='%Y/%m/%d')
-extension['Fecha'] = extension['Fecha'].dt.normalize()+datetime.timedelta(hours=12)
-extension.index = extension['Fecha']
-extension['prcp']=np.nan
-extension.drop(columns=["Fecha"], axis=1, inplace=True)
-extension.index = pd.to_datetime(extension.index)
-
-cuarto_tramo=cuarto_tramo.append(extension) 
-
+primer_tramo=f_solo_lluvia.loc['1961-01-02':'1981-09-27'] #7574 datos
+segundo_tramo= f_solo_lluvia.loc['1981-09-28':'2002-06-23'] #7574 datos
+tercer_tramo= f_solo_lluvia.loc['2002-06-24':'2023-03-20'] #7575 datos
 
 #%%
 #plotting tramos prueba
 
 plt.style.use("ggplot")
 
-fig, axes = plt.subplots(figsize = (40,23), nrows=4, ncols=1, sharey=True, dpi= 100)
-fig.suptitle('Ezeiza SMN - Serie de precipitación diaria-Enero 1961 - Marzo 2023\n   ', fontsize= 28)
+fig, axes = plt.subplots(figsize = (40,23), nrows=3, ncols=1, sharey=True, dpi= 100, facecolor='silver')
+fig.suptitle('Ezeiza SMN - Precipitación diaria - Enero 1961-Marzo 2023\n   ', fontsize= 33)
 
 #add DataFrames to subplots
 axes[0].fill_between(primer_tramo.index, primer_tramo['prcp'], color='blue')
 axes[1].fill_between(segundo_tramo.index, segundo_tramo['prcp'], color='blue')
 axes[2].fill_between(tercer_tramo.index, tercer_tramo['prcp'], color='blue')
-axes[3].fill_between(cuarto_tramo.index, cuarto_tramo['prcp'], color='blue')
-
 
 # Axis labels
 axes[0].set_xlabel(" ")
 axes[0].tick_params(axis='both',labelsize=26)
 axes[1].set_xlabel(" ")
-axes[1].set_ylabel("Precipitación diaria [mm]", fontsize= 28)
+axes[1].set_ylabel("Precipitación [mm]", fontsize= 26)
 axes[1].tick_params(axis='both',labelsize=26)
-axes[2].set_xlabel(" ")
+axes[2].set_xlabel("Años", fontsize= 28)
 axes[2].tick_params(axis='both',labelsize=26)
-axes[3].set_xlabel("Años", fontsize= 28)
-axes[3].tick_params(axis='both',labelsize=26)
 
-'''axes[0].xaxis.set_major_locator(mdates.MonthLocator(interval=12))
-axes[1].xaxis.set_major_locator(mdates.MonthLocator(interval=12))
-axes[2].xaxis.set_major_locator(mdates.MonthLocator(interval=12))'''
+axes[0].xaxis.set_major_locator(mdates.MonthLocator(interval=24))
+axes[1].xaxis.set_major_locator(mdates.MonthLocator(interval=24))
+axes[2].xaxis.set_major_locator(mdates.MonthLocator(interval=24))
 
 # Define the date format
-date_form = DateFormatter("%Y-%m")
+date_form = DateFormatter("%Y")
 axes[0].xaxis.set_major_formatter(date_form)
 axes[1].xaxis.set_major_formatter(date_form)
 axes[2].xaxis.set_major_formatter(date_form)
-axes[3].xaxis.set_major_formatter(date_form)
+'''
+axes[0].xaxis.set_major_locator(MultipleLocator(730))
+axes[0].xaxis.set_minor_locator(MultipleLocator(730))
+axes[0].set(xlim=["1961", "1981"])
+axes[1].xaxis.set_major_locator(MultipleLocator(730))
+axes[1].xaxis.set_minor_locator(MultipleLocator(730))
+axes[1].set(xlim=["1982", "2002"])
+axes[2].xaxis.set_major_locator(MultipleLocator(730))
+axes[2].xaxis.set_minor_locator(MultipleLocator(730))
+axes[2].set(xlim=["2003", "2023"])
+'''
 
-axes[0].xaxis.set_major_locator(MultipleLocator(731))
-axes[0].xaxis.set_minor_locator(MultipleLocator(731))
-axes[0].set(xlim=["1961-01", "1981-01"])
-axes[1].xaxis.set_major_locator(MultipleLocator(731))
-axes[1].xaxis.set_minor_locator(MultipleLocator(365))
-axes[1].set(xlim=["1981-01", "2001-01"])
-axes[2].xaxis.set_major_locator(MultipleLocator(731))
-axes[2].xaxis.set_minor_locator(MultipleLocator(365))
-axes[2].set(xlim=["2001-01", "2021-01"])
-axes[3].xaxis.set_major_locator(MultipleLocator(731))
-axes[3].xaxis.set_minor_locator(MultipleLocator(365))
-axes[3].set(xlim=["2021-01", "2041-01"])
 #plt.setp(axes[0].get_xticklabels(), rotation = 90)    
-axes[0].set_yticks(range(0, 125, 25))
+axes[0].set_yticks(range(0, 126, 25))
 
 plt.tight_layout()
-
+plt.savefig("plot/Presentación_de_datos_precip_diaria.png", dpi=300)
 plt.show()
 #queda acomodaa titulos, ylabel, mejorar visualizacion
 
@@ -296,7 +276,7 @@ PERCENTILES - CONTROL DE CALIDAD - Desde aca uso la CLIMATOLOGIA
 #me fijo que no haya valores negativos
 (df['prcp']<0).sum()
 
-#para la CLIMATOLOGIA SELECCIONO UN INTERVALO
+#para la CLIMATOLOGIA SELECCIONO UN INTERVALO, el mas actual
 df_climatologia=df.loc['1991-01-02':'2021-01-01'] #30 años eL 01 DE ENERO COMO ES 12 UTC TIENE EL DATO CORRESPONDIENTE AL 31 DE DIC DE 2020
 df_climatologia.info() #--->10958 de los cuales 14 NAN's y 10944 no nulos
 '''
@@ -306,52 +286,10 @@ nan_rows_clima = (df_climatologia[df_climatologia.isnull().any(1)])
 print(nan_rows_clima) #14 Nan's
 
 #%%
-'''PARA PERCENTILES VOY A CONSIDERAR SOLO LOS DIAS CON LLUVIA'''
+'''PARA PERCENTILES VOY A CONSIDERAR SOLO LOS DIAS CON LLUVIA
+o se precipitración diaria distinta de cero'''
 
 f_dfclima = df_climatologia[df_climatologia['prcp']!=0]  #2666 rows
-f_dfclima.describe()
-f_dfclima_p75=f_dfclima[f_dfclima['prcp']>=15]
-f_dfclima_p75[['prcp']].plot(figsize=(30, 8), fontsize=12) #sin nan, sin frec diaria, solo datos de pp
-
-f_dfclima_p75=f_dfclima_p75.asfreq("D") #solo para el calculo del pm
-#calculo pm trimestral para valores mayores o iguales a P75()
-pm_trim_p75=f_dfclima_p75['prcp'].rolling(90, min_periods=4).mean().shift(89)
-f_dfclima_p75=f_dfclima[f_dfclima['prcp']>=15] #vuelvo atras para la grafica continua
-#f_dfclima_p75[['prcp', 'pm_trimestral_p75']].plot(figsize=(20, 8), fontsize=12)
-plt.figure(figsize=(40, 12))
-plt.plot(f_dfclima_p75.index, f_dfclima_p75['prcp'], label='precipitacion diaria')
-plt.plot(pm_trim_p75, label='promedio movil 90D', color='blue')
-plt.title('Precipitación diaria igual o mayor a 15 mm (Percentil 75) y promedio movil de 90 días')
-plt.ylabel('Precipitación (mm)', fontsize=14)
-plt.xlabel('Años', fontsize=16)
-plt.tick_params(axis='both',labelsize=18)
-plt.legend(fontsize=14)
-date_form = DateFormatter("%Y-%m")
-plt.gca().xaxis.set_major_formatter(date_form)
-plt.xlim("1991-01", "2019-12")
-locator=ticker.MultipleLocator(base=365)
-plt.gca().xaxis.set_major_locator(locator)
-plt.xticks(rotation=45)
-plt.show()
-#%%
-'''
-
-#PROMEDIO MOVIL ANUAL
-
-'''
-f_dfclima_pm=f_dfclima.asfreq("D")
-#para los dias con lluvia tendria que dejar la frec diaria y poner esos dias como nan
-#o hacerlo desde la indexacion que por lo que estoy pensando seria lo mismo.
-Promedio_movil=f_dfclima_pm['prcp'].rolling(360, min_periods=1).mean().shift(1) #con shift(1) toma el promedio de los primeros 12 y lo ubica en el lugar 13
-#min_periods= número mín de obs en ventana requeridas para tener un valor; de lo contrario, el resultado es
-'''VER, SIGUE SIENDO RARO, GRAFICAR ENCIMA DE L SERIE Y HCERLO A MANO A VER QUE ESTA  TENDRIA Q HACER EL ACUMULADO MENSUAL???'''
-#plotting
-plt.figure(figsize=(22,6))
-plt.plot(Promedio_movil.index,Promedio_movil, linewidth=0.8, color='green')
-plt.ylabel('Precipitación diaria (mm)', fontsize=14)
-plt.title('Promedio movil de 12 meses-precipitación diaria (mm) - Ezeiza Aero', fontsize=16)
-plt.show()
-#%%
 #estadisticos, percentiles, sd... CLIMATOLOGIA COMPLETA
 f_dfclima['prcp'].describe().round(1)
 '''
@@ -396,7 +334,6 @@ Fecha
 1964-10-13 12:00:00   NaN
 1964-10-14 12:00:00   NaN
 '''
-
 #estadisticos, percentiles, sd...
 #solo dias con lluvia
 f_dfclima_anterior=df_clima_anterior[df_clima_anterior['prcp']!=0]  #2768 rows
@@ -423,15 +360,11 @@ Name: prcp, dtype: float64
 f_dfclima_anterior['prcp'].loc[f_dfclima_anterior['prcp']==128]  #--> 1961-12-16 12utc
 #%%
 '''
-Estadísticos para el periodo climatologico, difernciando trimestralmente
+Estadísticos para el periodo climatologico actual, 
+difernciando trimestralmente.
 
 '''
-
 #quiero hacer el describe diferenciando la onda anual
-
-#promedio de pp diaria para cada trimestre
-promedios_trim=f_dfclima.resample('Q').mean()
-promedios_trim.plot(figsize= (15, 5), linewidth= 1.5)
 
 #promedio trimestral de precipitacion diaria (unico)
 f_dfclima['Fecha']=pd.to_datetime(f_dfclima.index, format ='%Y/%m/%d')
@@ -443,44 +376,119 @@ percentiles_trimestral= f_dfclima.groupby(f_dfclima['Fecha'].dt.quarter).quantil
 #hago un df con valores estadisticos para cada estacion y luego grafico
 #creo un diccionario con los datos de las columnas
 
-data={'estación': ['verano', 'otoño', 'invierno', 'primavera'], 'media': [13.9, 10.2, 9.2, 12.1], 'Std': [17.1, 14.8, 12.5, 15.9],
+data={'Trimestres': ['EFM', 'AMJ', 'JAS', 'OND'], 'media': [13.9, 10.2, 9.2, 12.1], 'Std': [17.1, 14.8, 12.5, 15.9],
       'P75': [19, 13.5, 12, 16.1], 'P95': [52.4, 39.9, 33.8, 45.2],
       'Máx': [105, 120.3, 74, 101]}
 
-estadisticos_trimestres = pd.DataFrame(data)
-estadisticos_trimestres=estadisticos_trimestres.set_index('estación')
-columnas=estadisticos_trimestres.columns
+climatologia_por_trimestre= pd.DataFrame(data)
+climatologia_por_trimestre=climatologia_por_trimestre.set_index('Trimestres')
+
+#plotting
+columnas=climatologia_por_trimestre.columns
 num_barras = len(columnas)
 ancho_barras = 0.8
-indice=estadisticos_trimestres.index
-colores = ['orange', 'red', 'green', 'blue']
-
-estadisticos_trimestres.plot(kind='bar', figsize=(12,8))
-
+indice=climatologia_por_trimestre.index
+colores = ['orange','green', 'purple', 'blue', 'red']
+climatologia_por_trimestre.plot(kind='bar', figsize=(10,4),  color= colores)
 # Configurar el título y las etiquetas de los ejes
-plt.title('Ezeiza SMN- Estadísticos según estaciónes del año- 1991-2020')
-plt.xlabel('Estación del año')
-plt.ylabel('Precipitación diaria (mm)')
-
-# Configurar las etiquetas del eje x
-#plt.xticks(indice + (num_barras - 1) * ancho_barras / 2, indice)
-
+plt.title('Ezeiza SMN- Climatología trimestral- 1991-2020', fontsize=12)
+plt.xlabel('Trimestres', fontsize= 14)
+plt.ylabel('Precipitación diaria (mm)', fontsize= 11)
 # Mostrar la leyenda
-plt.legend(columnas, fontsize=12)
+plt.legend(columnas, fontsize=9)
+plt.savefig("plot/Climatologia_por_trimestres.png", dpi=200)
+plt.show()
+#%%
+'''promedio de pp diaria para cada trimestre INTENSIDAD'''
+#RESAMPLE.MEAN CALCULA LA MEDIA DE LOS GRUPOS, EXCLUYENDO VALOR FALTANTE
+#---> MI GRUPO ES UN TRIMESTRE, ENTONCES AL ACUM DE 90 DIAS LO DIVIDE POR 
+# LA CANT DE DIAS QUE LLOVIO -->INTENSIDAD (mm/dia)
+promedios_trim=f_dfclima.resample('Q').mean()
 
-# Mostrar el gráfico
+#plotting INTENSIDAD
+fig, ax = plt.subplots(figsize=(30, 12), facecolor='lavender')
+fig.suptitle('Ezeiza SMN - Intensidad de precipitación trimestral', fontsize= 28)
+# Add x-axis and y-axis
+ax.plot(promedios_trim.index,
+       promedios_trim['prcp'], marker='o',
+       color='red')
+
+ax.xaxis.set_major_locator(MultipleLocator(365))
+ax.xaxis.set_minor_locator(MultipleLocator(365))
+
+# Set title and labels for axes
+ax.set(xlim=["1991", "2021"])
+
+ax.tick_params(axis='both',labelsize=22)
+ax.set_xlabel("Años", fontsize= 26)
+ax.set_ylabel("Intensidad (mm/día)", fontsize= 26)
+date_form = DateFormatter("%Y")
+ax.xaxis.set_major_formatter(date_form)
+
+plt.setp(ax.get_xticklabels(), rotation =45)  
+plt.savefig("plot/Intensidad_trimestral.png", dpi=300)
 plt.show()
 
 #%%
+'''ESTO NO CORRERLO
+
+VOLVIENDO A LA CLIMATOLOGIA ACTUAL, NOS QUEDAMOS SOLO CON VAORES 
+MAYORES AL P75 (ANUAL)  QUE SON 15 MM, igual al ser anual no es muy representativo
+f_dfclima_p75=f_dfclima[f_dfclima['prcp']>=15]
+f_dfclima_p75[['prcp']].plot(figsize=(30, 8), fontsize=12) #sin nan, sin frec diaria, solo datos de pp
+
+f_dfclima_p75=f_dfclima_p75.asfreq("D") #solo para el calculo del pm
+#calculo pm trimestral para valores mayores o iguales a P75()
+pm_trim_p75=f_dfclima_p75['prcp'].rolling(90, min_periods=4).mean().shift(89)
+f_dfclima_p75=f_dfclima[f_dfclima['prcp']>=15] #vuelvo atras para la grafica continua
+#f_dfclima_p75[['prcp', 'pm_trimestral_p75']].plot(figsize=(20, 8), fontsize=12)
+plt.figure(figsize=(40, 12))
+plt.plot(f_dfclima_p75.index, f_dfclima_p75['prcp'], label='precipitacion diaria')
+plt.plot(pm_trim_p75, label='promedio movil 90D', color='blue')
+plt.title('Precipitación diaria igual o mayor a 15 mm (Percentil 75) y promedio movil de 90 días')
+plt.ylabel('Precipitación (mm)', fontsize=14)
+plt.xlabel('Años', fontsize=16)
+plt.tick_params(axis='both',labelsize=18)
+plt.legend(fontsize=14)
+date_form = DateFormatter("%Y-%m")
+plt.gca().xaxis.set_major_formatter(date_form)
+plt.xlim("1991-01", "2019-12")
+locator=ticker.MultipleLocator(base=365)
+plt.gca().xaxis.set_major_locator(locator)
+plt.xticks(rotation=45)
+plt.show()
+#%%
+'''
+
+#PROMEDIO MOVIL ANUAL
+
+'''
+f_dfclima_pm=f_dfclima.asfreq("D")
+#para los dias con lluvia tendria que dejar la frec diaria y poner esos dias como nan
+#o hacerlo desde la indexacion que por lo que estoy pensando seria lo mismo.
+Promedio_movil=f_dfclima_pm['prcp'].rolling(360, min_periods=1).mean().shift(1) #con shift(1) toma el promedio de los primeros 12 y lo ubica en el lugar 13
+#min_periods= número mín de obs en ventana requeridas para tener un valor; de lo contrario, el resultado es
+VER, SIGUE SIENDO RARO, GRAFICAR ENCIMA DE L SERIE Y HCERLO A MANO A VER QUE ESTA  TENDRIA Q HACER EL ACUMULADO MENSUAL???
+#plotting
+plt.figure(figsize=(22,6))
+plt.plot(Promedio_movil.index,Promedio_movil, linewidth=0.8, color='green')
+plt.ylabel('Precipitación diaria (mm)', fontsize=14)
+plt.title('Promedio movil de 12 meses-precipitación diaria (mm) - Ezeiza Aero', fontsize=16)
+plt.show()
+'''
+#%%
 ''' PROMEDIO MENSUAL PARA LA SERIE CLIMATOLOGICA 1991-2020'''
-meses=f_dfclima.resample('M').sum() #acumulados para cada mes
-meses['Fecha']=pd.to_datetime(meses.index, format ='%Y/%m/%d')
-meses_prom=meses.groupby(meses['Fecha'].dt.month).mean().round(1) #promedia los acum mensuales
+acumulado_mensual=f_dfclima.resample('M').sum() #acumulados para cada mes
+acumulado_mensual['Fecha']=pd.to_datetime(acumulado_mensual.index, format ='%Y/%m/%d')
+meses_prom=acumulado_mensual.groupby(acumulado_mensual['Fecha'].dt.month).mean().round(1) #promedia los acum mensuales
+#meses_frios=[5, 6, 7, 8, 9]
+#meses_calidos=[10, 11, 12, 1, 2, 3, 4]
 sbn.set(font_scale=1.0, style="whitegrid")
 
 fig, ax = plt.subplots(figsize=(14, 5))
-ax3=ax.bar(meses_prom.index, meses_prom['prcp'], width= 0.4, color='mediumslateblue')
 
+ax3=ax.bar(meses_prom.index, meses_prom['prcp'], width= 0.4, color='mediumslateblue')
+#ax3=ax.bar(lista_meses_calidos, meses_prom['prcp'], width= 0.4, color='pink')
 
 ax.set(xlabel="Meses",
        ylabel="Precipitación acumulada (mm)",
