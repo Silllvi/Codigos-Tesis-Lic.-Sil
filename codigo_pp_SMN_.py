@@ -10,7 +10,7 @@ import os
 import pandas as pd
 import datetime
 import numpy as np
-import seaborn as sbn
+import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as ticker
@@ -18,7 +18,7 @@ from matplotlib.dates import DateFormatter
 from pandas.plotting import register_matplotlib_converters
 from matplotlib.ticker import MultipleLocator 
 register_matplotlib_converters()
-sbn.set() # Setting seaborn as default style even if use only matplotlib
+sns.set() # Setting seaborn as default style even if use only matplotlib
 
 #estamos probando git
 
@@ -483,34 +483,82 @@ acumulado_mensual['Fecha']=pd.to_datetime(acumulado_mensual.index, format ='%Y/%
 meses_prom=acumulado_mensual.groupby(acumulado_mensual['Fecha'].dt.month).mean().round(1) #promedia los acum mensuales
 #meses_frios=[5, 6, 7, 8, 9]
 #meses_calidos=[10, 11, 12, 1, 2, 3, 4]
-sbn.set(font_scale=1.0, style="whitegrid")
+sns.set(font_scale=1.0, style="whitegrid")
 
-fig, ax = plt.subplots(figsize=(14, 5))
+fig, ax = plt.subplots(figsize=(14, 6))
+fig.suptitle('Ezeiza SMN - Valor medio de precipitación mensual\n 1991-2020')
 
-ax3=ax.bar(meses_prom.index, meses_prom['prcp'], width= 0.4, color='mediumslateblue')
+
+clrs = ['lightblue' if (4< x < 10) else 'pink' for x in meses_prom.index ]
+prom=sns.barplot(ax=ax, x=meses_prom.index, y=meses_prom['prcp'], palette=clrs, linewidth=5)
+prom.set(xlabel ="Meses")#, title ='some title')
+prom.set_yticks(range(1, 125, 20))
+prom.set_ylabel("Precipitación acumulada promedio (mm)", fontsize= 10)
+
+
+#clrs = ['grey' if (4< x < 10) else 'red' for x in meses_prom.index ]
+#prom=sbn.barplot(x=meses_prom.index, y=meses_prom['prcp'], palette=clrs)
+#prom.set(xlabel ="GFG X", ylabel = "GFG Y", title ='some title')
+
+
+#fig, ax = plt.subplots(figsize=(14, 5))
+
+#ax3=ax.bar(meses_prom.index, meses_prom['prcp'], width= 0.4, color='mediumslateblue')
 #ax3=ax.bar(lista_meses_calidos, meses_prom['prcp'], width= 0.4, color='pink')
 
+'''
 ax.set(xlabel="Meses",
        ylabel="Precipitación acumulada (mm)",
        title="Ezeiza SMN- Valor medio de precipitación mensual\n1991-2020")
 ax.set_xticks(range(1, 13, 1))
-
+'''
 #plt.setp(ax.get_xticklabels()) 
 #pone etiqueta a cada barra
-for p in ax3.patches:
+for p in ax.patches:
     ax.annotate(np.round(p.get_height(),decimals=2), (p.get_x()+p.get_width()/2., 
                                                       p.get_height()), ha='center', 
                 va='center', xytext=(0, 10), textcoords='offset points')
+plt.savefig("plot/promedio_mensual_pp.png", dpi=200)
 plt.show()
 
 #%%
+'''TABLA DE ESTADÍSTICOS SEGUN SIS VERANO O SIS INVIERNO'''
+'''período climatologico 1991-2020'''
 
-#plotting ACUMULADOS MENSUALES   ----> ACOMODAR EL EJE  X
+#TENGO QUE USAR LOC CON EL TUTORIAL DE MI WHASTAPP
+for x in f_dfclima.index.month: 
+    if (4< x < 10):
+        estadistico_sis_frio=f_dfclima.groupby(f_dfclima['Fecha'].dt.month).agg(['mean',
+                                                                             'std', 'min', 'max']).round(1)
+    else:
+        estadistico_sis_calido= f_dfclima.groupby(f_dfclima['Fecha'].dt.month).agg(['mean',
+                                                                             'std', 'min', 'max']).round(1)
 
-meses['mes']=meses.index.month
+promedio_trimestral=f_dfclima.groupby(f_dfclima['Fecha'].dt.quarter).mean().round(1)
+estadistico_trimestral=f_dfclima.groupby(f_dfclima['Fecha'].dt.quarter).agg(['mean',
+                                                                             'std', 'min', 'max']).round(1)
+percentiles_trimestral= f_dfclima.groupby(f_dfclima['Fecha'].dt.quarter).quantile([0.25, 0.5, 0.75, 0.9, 0.95, 0.99]).round(1)
+
+#hago un df con valores estadisticos para cada estacion y luego grafico
+#creo un diccionario con los datos de las columnas
+
+data={'Trimestres': ['EFM', 'AMJ', 'JAS', 'OND'], 'media': [13.9, 10.2, 9.2, 12.1], 'Std': [17.1, 14.8, 12.5, 15.9],
+      'P75': [19, 13.5, 12, 16.1], 'P95': [52.4, 39.9, 33.8, 45.2],
+      'Máx': [105, 120.3, 74, 101]}
+
+climatologia_por_trimestre= pd.DataFrame(data)
+climatologia_por_trimestre=climatologia_por_trimestre.set_index('Trimestres')
+
+
+#%%
+#plotting ACUMULADOS MENSUALES de cada año de la serie ----> ACOMODAR EL EJE  X
+#podri servir para comparar con el promedio mensual de pp acumulada para 
+#cada mes, el grafico rosa y celeste de barras. Lo dejamos por las duda
+# nos sirva en algun momento
+acumulado_mensual['mes']=acumulado_mensual.index.month
 fig, ax=plt.subplots(figsize=(20,5))
                                                
-ax.plot(meses.index, meses.prcp,
+ax.plot(acumulado_mensual.index, acumulado_mensual.prcp,
         marker='o', color='b', linestyle='--')
 
 ax.set(xlabel="Meses",
@@ -522,6 +570,11 @@ date_form = DateFormatter("%Y-%m")
 ax.set_xticks(range(date_form))
 #ax.axhline(y=mean_acum_trimestral[0],
  #             color='r', linestyle='--', label='media verano')
+#%%
+#PP TRIMESTRAL ACUMULADA VS EL PROMEDIO DE PP TRIMESTRAL PARA CADA ESTACION
+#Nos podria servir para ver que veanos fueron mas lluviosos, por ejemplo, si estu
+#vieron muy por encima de la media de los acuulados de pp del verano.
+#igual tiene errores en el ultimo subplot y falta mejorar el grafico.
 
 acum_trimestral=f_dfclima.resample('Q').sum()
 acum_trimestral['Fecha'] =pd.to_datetime(acum_trimestral.index,format ='%Y/%m/%d')
