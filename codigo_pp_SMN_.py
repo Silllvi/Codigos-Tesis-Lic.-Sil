@@ -525,51 +525,9 @@ plt.show()
 '''TABLA DE ESTADÍSTICOS SEGUN SIS VERANO O SIS INVIERNO'''
 '''período climatologico 1991-2020'''
 
+#plotting ACUMULADOS MENSUALES   ----> ACOMODAR EL EJE  X
 
-f_dfclima['Fecha'] = pd.to_datetime(f_dfclima['Fecha']) #estan solo los dias con lluvia
-#separo los datos en meses frios y meses calidos
-meses_sis_frio=f_dfclima[f_dfclima['Fecha'].dt.month.isin([5, 6, 7, 8, 9])] #991 datos
-meses_sis_calido=f_dfclima[f_dfclima['Fecha'].dt.month.isin([1, 2, 3, 4, 10, 11, 12])] #1675 datos
-
-
-estadisticos_sis_frio=meses_sis_frio.agg(['mean','std', 'min', 'max']).round(1)
-estadistico_sis_calido= meses_sis_calido.agg(['mean', 'std', 'min', 'max']).round(1)
-                                                                         
-percentiles_sis_frio= meses_sis_frio.quantile([0.25, 0.5, 0.75, 0.9, 0.95, 0.99]).round(1)
-percentiles_sis_calido= meses_sis_calido.quantile([0.25, 0.5, 0.75, 0.9, 0.95, 0.99]).round(1)
-#hago un df con valores estadisticos para cada estacion y luego grafico
-#creo un diccionario con los datos de las columnas
-
-data_clima_sis={'epoca_sis': ['SIS CÁLIDO', 'SIS FRÍO'], 'media': [12.9, 9.1], 'Std': [16.5, 13],
-      'P75': [17, 12], 'P90': [34.9, 26], 'P95': [48, 34.9], 'P99': [72.7, 55.6],
-      'Máx': [116, 120.3]}
-
-climatologia_epoca_sis= pd.DataFrame(data_clima_sis)
-climatologia_epoca_sis=climatologia_epoca_sis.set_index('epoca_sis')
-
-#plotting
-columnas=climatologia_epoca_sis.columns
-num_barras = len(columnas)
-ancho_barras = 0.8
-indice=climatologia_epoca_sis.index
-colores = ['#AAA662','#C79FEF', '#7BC8F6', '#76FF7B', '#C875C4', '#BFBF00', '#008000']
-climatologia_epoca_sis.plot(kind='bar', figsize=(10,4),  color= colores)
-# Configurar el título y las etiquetas de los ejes
-plt.title('Ezeiza SMN- Climatología según época SIS- 1991-2020', fontsize=12)
-plt.xlabel('Época SIS', fontsize= 14)
-plt.ylabel('Precipitación diaria (mm)', fontsize= 11)
-# Mostrar la leyenda
-plt.legend(columnas, fontsize=9)
-plt.savefig("plot/Climatologia_epoca_sis.png", dpi=200)
-plt.show()
-
-
-#%%
-#plotting ACUMULADOS MENSUALES de cada año de la serie ----> ACOMODAR EL EJE  X
-#podri servir para comparar con el promedio mensual de pp acumulada para 
-#cada mes, el grafico rosa y celeste de barras. Lo dejamos por las duda
-# nos sirva en algun momento
-acumulado_mensual['mes']=acumulado_mensual.index.month
+meses['mes']=meses.index.month
 fig, ax=plt.subplots(figsize=(20,5))
                                                
 ax.plot(acumulado_mensual.index, acumulado_mensual.prcp,
