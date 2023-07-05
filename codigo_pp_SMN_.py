@@ -490,10 +490,9 @@ fig.suptitle('Ezeiza SMN - Valor medio de precipitación mensual\n 1991-2020')
 
 
 clrs = ['lightblue' if (4< x < 10) else 'pink' for x in meses_prom.index ]
-6555555555555555550prom=sns.barplot(ax=ax, x=meses_prom.index, y=meses_prom['prcp'], palette=clrs, linewidth=5)9
-P¨´¨´¨´¨´¨´´'prom.set(xlabel ="Meses")#, title ='some title')
-prom.set_ytic+´´´´´´´´´´´´´´´´´´{
-    .........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................-+s(range(1, 125, 20))
+prom=sns.barplot(ax=ax, x=meses_prom.index, y=meses_prom['prcp'], palette=clrs, linewidth=5)
+prom.set(xlabel ="Meses")
+prom.set_yticks(range(1, 125, 20))
 prom.set_ylabel("Precipitación acumulada promedio (mm)", fontsize= 10)
 
 
@@ -545,13 +544,17 @@ data_clima_sis={'epoca_sis':['SIS CÁLIDO', 'SIS FRÍO'], 'media':[12.9, 9.1],
 
 climatologia_epoca_sis=pd.DataFrame(data_clima_sis)
 climatologia_epoca_sis= climatologia_epoca_sis.set_index('epoca_sis')
+climatologia_epoca_sis=climatologia_epoca_sis.transpose()
+climatologia_epoca_sis.to_excel("plot/tabla_climatologiapp_epoca_sis.xlsx")
 
+plt.style.use("ggplot")
 columnas=climatologia_epoca_sis.columns
 num_barras= len(columnas)
 ancho_barras=0.8
 indice=climatologia_epoca_sis.index
-colores=['#AAA662', '#C79FEF', '#7BC8F6', '#76FF7B', '#C875C4', '#BFBF00', '#008000']
+colores=['#C79FEF', '#7BC8F6']
 climatologia_epoca_sis.plot(kind='bar', figsize=(10, 4), color=colores)
+
 #configurar l titulo y las etiquetas de los ejes
 plt.title('Ezeiza SMN - Climatología segun época SIS - 1991-2020', fontsize=12)
 plt.xlabel('Época SIS', fontsize=14)
@@ -560,6 +563,25 @@ plt.ylabel('Precipitación diaria (mm)', fontsize=11)
 plt.legend(columnas, fontsize=9)
 plt.savefig('plot/Climatologia_epoca_sis.png', dpi=200)
 plt.show()
+#%%
+#Percentil 75 para cada mes diferenciando por criterio sis
+
+p75_frio=meses_sis_frio.groupby(meses_sis_frio['Fecha'].dt.month).quantile(0.75).round(1)
+p75_frio=list(p75_frio['prcp'])
+print(p75_frio)
+p75_calido=meses_sis_calido.groupby(meses_sis_calido['Fecha'].dt.month).quantile(0.75).round(1)
+p75_calido=list(p75_calido['prcp'])
+print(p75_calido)
+
+meses_calidos=[10, 11, 12, 1, 2, 3, 4]
+datos_filtrados_calido=[]     
+for i in range(len(meses_calidos)):
+    datos_filtrados_calido.append(meses_sis_calido[(meses_sis_calido.index.month==meses_calidos[i])
+                                                   & (meses_sis_calido.prcp>=p75_calido[i])])
+ 
+datos_filtrados_calido2= pd.concat(datos_filtrados_calido)
+
+#nuevo=meses_sis_calido[(meses_sis_calido.index.month==10) & (meses_sis_calido.prcp>=15.9)]
 #%%
 #plotting ACUMULADOS MENSUALES   ----> ACOMODAR EL EJE  X
 #podri servir para comparar con el promedio mensual de pp acumulada para 
@@ -722,7 +744,7 @@ from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
 
 # Use white grid plot background from seaborn
-sbn.set(font_scale=1.0, style="whitegrid")
+sns.set(font_scale=1.0, style="whitegrid")
 
 fig, ax = plt.subplots(figsize=(15, 5))
 ax.bar(eje_x, valores_extremos['prcp'], width= 0.4, color='mediumslateblue')
@@ -749,7 +771,7 @@ BOXPLOT mensual
 
 f_dfclima['Mes']=f_dfclima.index.month  
 fig, ax = plt.subplots(figsize=(14,9), dpi=72)
-sbn.boxplot(data=f_dfclima,x='Mes',y='prcp', ax=ax)
+sns.boxplot(data=f_dfclima,x='Mes',y='prcp', ax=ax)
 plt.savefig('estacionalidad_anual.png', dpi=300)
 plt.show()
 
@@ -783,21 +805,21 @@ timeend
 '''
 
 #vuelgo a agregar una columna con solo los meses sacada del indice, pero ahora en el df mes (antes lo hice en el f_df)
-               
-medias_mensuales = acum_mes.groupby(acum_mes['Mes']).mean()
+acum_mes['Mes'] = acum_mes.index.month 
+#medias_mensuales = acum_mes.groupby(acum_mes['Mes']).mean()
 #?
-fig, ax = plt.subplots(figsize=(14,9), dpi=120)
-plt.title("Promedios mensuales de pecipitación", fontweight= 'bold', fontsize=16)
-plt.bar(medias_mensuales.index, medias_mensuales['prcp'])
+#fig, ax = plt.subplots(figsize=(14,9), dpi=120)
+#plt.title("Promedios mensuales de pecipitación", fontweight= 'bold', fontsize=16)
+#plt.bar(medias_mensuales.index, medias_mensuales['prcp'])
 
-                
-acum_mes['Mes'] = acum_mes.index.month   
+   
 fig, ax = plt.subplots(figsize=(16,8), dpi=120)
+colores=['lightblue' if (4<x<10) else 'pink' for x in acum_mes.Mes]
 plt.title("Ezeiza SMN - Precipitación acumulada mensual\nPeríodo 1991-2020", fontweight= 'bold', fontsize=16)
-sbn.boxplot(data=acum_mes, x='Mes', y='prcp', ax=ax, linewidth= 1.7, 
+sns.boxplot(data=acum_mes, x='Mes', y='prcp', ax=ax, linewidth= 1.7, palette=colores,
             flierprops={"marker": "x"})
 plt.ylabel("Precipitación (mm)", fontsize=16)
-plt.savefig('boxplot_acum_mensual.png', dpi=300)
+plt.savefig('plot/boxplot_acum_mensual.png', dpi=300)
 ax.tick_params(axis='both',labelsize=14)
 plt.show()
 
@@ -806,7 +828,7 @@ prom_enero=acum_mes(acum_mes['Mes']==1).mean()
 
 prom_mensual=pd.DataFrame(clima.prcp.resample('M').mean())
 prom_mensual['Mes'] = prom_mensual.index.month 
-sbn.barplot(x=Mes, y=prcp, data=prom_mensual)
+sns.barplot(x=Mes, y=prcp, data=prom_mensual)
 #%%
 #cuando tengo mas de un año, agrupo por mes independientemente del año y ploteo
 clima['fecha'].dt.month
