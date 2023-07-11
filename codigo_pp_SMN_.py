@@ -564,22 +564,111 @@ plt.legend(columnas, fontsize=9)
 plt.savefig('plot/Climatologia_epoca_sis.png', dpi=200)
 plt.show()
 #%%
+
+#PERCENTIL 75 PARA CADA MES
+p75= f_dfclima.groupby(f_dfclima['Fecha'].dt.month).quantile(0.75).round(1)
+p75=list(p75['prcp'])
+print(p75)
+filtro_datos_p75=[]
+meses=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+for i in range(len(meses)): 
+    filtro_datos_p75.append(f_dfclima[ (f_dfclima.index.month==meses[i]) & (f_dfclima.prcp>=p75[i]) ])
+     
+filtro_datos_p75= pd.concat(filtro_datos_p75)
+print(filtro_datos_p75.index)
+filtro_datos_p75=filtro_datos_p75.sort_index()
+
+#filtro_datos_p75['prcp'].plot(kind='bar', width=0.8, figsize=(50,12))
+filtro_datos_p75=filtro_datos_p75.asfreq('D')
+filtro_datos_p75.index= pd.to_datetime(filtro_datos_p75.index)
+
+# Handle date time conversions between pandas and matplotlib
+from pandas.plotting import register_matplotlib_converters
+from matplotlib.ticker import MultipleLocator
+register_matplotlib_converters()
+
+
+# Create figure and plot space
+fig, ax = plt.subplots(figsize=(50, 12), facecolor='lavender')
+fig.suptitle('Ezeiza SMN - Extremos de precipitación\n1991 - 2020', fontsize= 28)
+# Add x-axis and y-axis
+mes=filtro_datos_p75.index.month  
+clrs2 = ['blue' if (4< x < 10) else 'red' for x in mes]  #ETA MAL LO DEL COLOR
+ax.fill_between(filtro_datos_p75.index,         #BAR O FILL_BETWEEN?SE VEN MAS DATOS EN ESTE ULTIMO
+       filtro_datos_p75['prcp'],
+       color=clrs2)
+
+
+
+ax.xaxis.set_major_locator(MultipleLocator(731))
+ax.xaxis.set_minor_locator(MultipleLocator(365))
+
+# Set title and labels for axes
+ax.set(xlim=["1991-01", "2020-12"])
+
+ax.tick_params(axis='both',labelsize=22)
+ax.set_ylabel("Precipitación diaria por encima de percentil 75 [mm]", fontsize= 26)
+ax.tick_params(axis='both',labelsize=24)
+ax.set_xlabel("Años", fontsize= 26)
+ax.tick_params(axis='both',labelsize=24)
+ax.set_yticks(range(10, 130, 10))
+
+plt.setp(ax.get_xticklabels(), rotation = 0)     
+
+# Define the date format
+date_form = DateFormatter("%Y-%m")
+ax.xaxis.set_major_formatter(date_form)
+plt.show()
+
+'''
+plt.style.use("ggplot")
+fig, ax=plt.subplots(figsize=(20,5))
+ax=filtro_datos_p75['prcp'].plot(kind='bar', color='blue')
+
+plt.setp(ax.get_xticklabels(), rotation = 90)     
+
+# Define the date format
+
+
+ax.set(xlabel="Años",
+       ylabel="Precipitación diaria (mm)",
+       title="Ezeiza SMN- Precipitación extrema\n1991-2020")
+locator=ticker.MultipleLocator(base=24)
+plt.gca().xaxis.set_major_locator(locator)
+'''
+#%% 
 #Percentil 75 para cada mes diferenciando por criterio sis
+################## FRIO ######################
 
 p75_frio=meses_sis_frio.groupby(meses_sis_frio['Fecha'].dt.month).quantile(0.75).round(1)
 p75_frio=list(p75_frio['prcp'])
 print(p75_frio)
+meses_frios=[5, 6, 7, 8, 9]
+datos_filtrados_frio=[]     
+for i in range(len(meses_frios)):
+    datos_filtrados_frio.append(meses_sis_frio[(meses_sis_frio.index.month==meses_frios[i])
+                                                   & (meses_sis_frio.prcp>=p75_frio[i])])
+ 
+datos_filtrados_frio= pd.concat(datos_filtrados_frio)
+print(datos_filtrados_frio.index)
+datos_filtrados_frio=datos_filtrados_frio.sort_index()
+
+################## CALIDO ######################
+
 p75_calido=meses_sis_calido.groupby(meses_sis_calido['Fecha'].dt.month).quantile(0.75).round(1)
 p75_calido=list(p75_calido['prcp'])
 print(p75_calido)
 
-meses_calidos=[10, 11, 12, 1, 2, 3, 4]
+meses_calidos=[1, 2, 3, 4, 10, 11, 12]
 datos_filtrados_calido=[]     
 for i in range(len(meses_calidos)):
     datos_filtrados_calido.append(meses_sis_calido[(meses_sis_calido.index.month==meses_calidos[i])
                                                    & (meses_sis_calido.prcp>=p75_calido[i])])
  
-datos_filtrados_calido2= pd.concat(datos_filtrados_calido)
+datos_filtrados_calido= pd.concat(datos_filtrados_calido)
+print(datos_filtrados_calido.index)
+datos_filtrados_calido=datos_filtrados_calido.sort_index()
+
 
 #nuevo=meses_sis_calido[(meses_sis_calido.index.month==10) & (meses_sis_calido.prcp>=15.9)]
 #%%
