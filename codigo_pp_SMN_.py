@@ -226,9 +226,9 @@ fig, axes = plt.subplots(figsize = (40,23), nrows=3, ncols=1, sharey=True, dpi= 
 fig.suptitle('Ezeiza SMN - Precipitación diaria - Enero 1961-Marzo 2023\n   ', fontsize= 33)
 
 #add DataFrames to subplots
-axes[0].fill_between(primer_tramo.index, primer_tramo['prcp'], color='blue')
-axes[1].fill_between(segundo_tramo.index, segundo_tramo['prcp'], color='blue')
-axes[2].fill_between(tercer_tramo.index, tercer_tramo['prcp'], color='blue')
+axes[0].fill_between(primer_tramo.index, primer_tramo['prcp'], color='blue', linewidth=0.9)
+axes[1].fill_between(segundo_tramo.index, segundo_tramo['prcp'], color='blue', linewidth=0.9)
+axes[2].fill_between(tercer_tramo.index, tercer_tramo['prcp'], color='blue', linewidth=0.9)
 
 # Axis labels
 axes[0].set_xlabel(" ")
@@ -581,7 +581,69 @@ filtro_datos_p75=filtro_datos_p75.sort_index()
 #filtro_datos_p75['prcp'].plot(kind='bar', width=0.8, figsize=(50,12))
 filtro_datos_p75=filtro_datos_p75.asfreq('D')
 filtro_datos_p75.index= pd.to_datetime(filtro_datos_p75.index)
+#%%
+#plotting tramos prueba
+filtro_datos_p75['mes']=filtro_datos_p75['Fecha'].dt.month
 
+filtro_1=filtro_datos_p75.loc['1991-01-21':'2001-01-01'] #3634 dttos
+filtro_2=filtro_datos_p75.loc['2001-01-02':'2010-12-14'] # 3634 datos
+filtro_3=filtro_datos_p75.loc['2010-12-15':'2020-11-25'] #3634 datos
+
+plt.style.use("ggplot")
+
+fig, axes = plt.subplots(figsize = (36,18), nrows=3, ncols=1, sharey=True, dpi= 100, facecolor='silver')
+fig.suptitle('Ezeiza SMN - Extremos de precipitación\n1991 - 2020', fontsize= 33)
+
+clrs1 = ['lightblue' if (4< x < 10) else 'pink' for x in filtro_1.mes]
+clrs2 = ['lightblue' if (4< x < 10) else 'pink' for x in filtro_2.mes]
+clrs3 = ['lightblue' if (4< x < 10) else 'pink' for x in filtro_3.mes]
+#add DataFrames to subplots
+axes[0].plot(filtro_1.index, filtro_1['prcp'], 'o', color='red')
+axes[0].fill_between(filtro_1.index, filtro_1['prcp'], color='maroon', linewidth=1.5)
+axes[1].plot(filtro_2.index, filtro_2['prcp'], 'o', color='red')
+axes[1].fill_between(filtro_2.index, filtro_2['prcp'], color='maroon', linewidth=1.5)
+axes[2].plot(filtro_3.index, filtro_3['prcp'], 'o', color='red')
+axes[2].fill_between(filtro_3.index, filtro_3['prcp'], color='maroon', linewidth=1.5)
+
+# Axis labels
+axes[0].set_xlabel(" ")
+axes[0].tick_params(axis='both',labelsize=26)
+axes[1].set_xlabel(" ")
+axes[1].set_ylabel("Precipitación [mm]", fontsize= 26)
+axes[1].tick_params(axis='both',labelsize=26)
+axes[2].set_xlabel("Años", fontsize= 28)
+axes[2].tick_params(axis='both',labelsize=26)
+
+axes[0].xaxis.set_major_locator(mdates.MonthLocator(interval=24))
+axes[1].xaxis.set_major_locator(mdates.MonthLocator(interval=24))
+axes[2].xaxis.set_major_locator(mdates.MonthLocator(interval=24))
+
+# Define the date format
+date_form = DateFormatter("%Y")
+axes[0].xaxis.set_major_formatter(date_form)
+axes[1].xaxis.set_major_formatter(date_form)
+axes[2].xaxis.set_major_formatter(date_form)
+'''
+axes[0].xaxis.set_major_locator(MultipleLocator(730))
+axes[0].xaxis.set_minor_locator(MultipleLocator(730))
+axes[0].set(xlim=["1961", "1981"])
+axes[1].xaxis.set_major_locator(MultipleLocator(730))
+axes[1].xaxis.set_minor_locator(MultipleLocator(730))
+axes[1].set(xlim=["1982", "2002"])
+axes[2].xaxis.set_major_locator(MultipleLocator(730))
+axes[2].xaxis.set_minor_locator(MultipleLocator(730))
+axes[2].set(xlim=["2003", "2023"])
+'''
+
+#plt.setp(axes[0].get_xticklabels(), rotation = 90)    
+axes[0].set_yticks(range(0, 126, 25))
+
+plt.tight_layout()
+plt.savefig("plot/Presentación_de_datos_precip_superior_p75.png", dpi=300)
+plt.show()
+
+
+#%%
 # Handle date time conversions between pandas and matplotlib
 from pandas.plotting import register_matplotlib_converters
 from matplotlib.ticker import MultipleLocator
@@ -592,13 +654,23 @@ register_matplotlib_converters()
 fig, ax = plt.subplots(figsize=(50, 12), facecolor='lavender')
 fig.suptitle('Ezeiza SMN - Extremos de precipitación\n1991 - 2020', fontsize= 28)
 # Add x-axis and y-axis
-mes=filtro_datos_p75.index.month  
-clrs2 = ['blue' if (4< x < 10) else 'red' for x in mes]  #ETA MAL LO DEL COLOR
-ax.fill_between(filtro_datos_p75.index,         #BAR O FILL_BETWEEN?SE VEN MAS DATOS EN ESTE ULTIMO
-       filtro_datos_p75['prcp'],
-       color=clrs2)
+filtro_datos_p75['mes']=filtro_datos_p75.index.month  
+clrs2 = ['blue' if (4< x < 10) else 'red' for x in filtro_datos_p75.mes]  #ETA MAL LO DEL COLOR
 
+fig, ax = plt.subplots(figsize=(50, 12))
+ax.plot(filtro_datos_p75.index, filtro_datos_p75['prcp'], color="black")
+colors = ['pink', 'blue']
+mes=np.array(list(filtro_datos_p75.index.month))
+for i in range(mes):
+    plt.fill_between(filtro_datos_p75['Fecha'].iloc[i:i+4], filtro_datos_p75['prcp'].iloc[i:i+4], color=colors[i])
 
+plt.grid(True)
+ax.fill_between(filtro_datos_p75.index, filtro_datos_p75['prcp'], 
+                color= 'red')
+ax.fill_between(filtro_datos_p75.index, filtro_datos_p75['prcp'], 
+                where=filtro_datos_p75.mes > 10, facecolor= 'pink')
+ax.fill_between(filtro_datos_p75.index, filtro_datos_p75['prcp'], 
+                where=filtro_datos_p75.mes <4, facecolor= 'pink')
 
 ax.xaxis.set_major_locator(MultipleLocator(731))
 ax.xaxis.set_minor_locator(MultipleLocator(365))
@@ -637,6 +709,35 @@ locator=ticker.MultipleLocator(base=24)
 plt.gca().xaxis.set_major_locator(locator)
 '''
 #%% 
+'''promedio de pp diaria para cada MES INTENSIDAD'''
+#RESAMPLE.MEAN CALCULA LA MEDIA DE LOS GRUPOS, EXCLUYENDO VALOR FALTANTE
+#---> MI GRUPO ES UN MES, ENTONCES AL ACUM DE 30 DIAS LO DIVIDE POR 
+# LA CANT DE DIAS QUE LLOVIO -->INTENSIDAD (mm/dia)
+intensidad_mensual=filtro_datos_p75.resample('M').mean().round(1)
+mes_int=intensidad_mensual['mes']
+colors= ['grey' if (4< s < 10) else 'red' for s in mes_int]
+fig, ax = plt.subplots(figsize=(50,12))
+sns.set_style('white')
+ax=sns.barplot(x=intensidad_mensual.index, y='prcp',
+               data=intensidad_mensual, palette=colors)
+
+plt.title('Ezeiza SMN - Intensidad de precipitación mensual', fontsize= 28)
+#plotting INTENSIDAD
+ax = plt.gca()
+ax.legend(labels=["SIS FRÍO","SIS CÁLIDO"], fontsize='20')
+ax.xaxis.set_major_locator(ticker.MultipleLocator(30))
+
+ax.tick_params(axis='both',labelsize=22)
+ax.set_xlabel("Años", fontsize= 26)
+ax.set_ylabel("Intensidad (mm/día)", fontsize= 26)
+ax.grid(True)
+
+plt.setp(ax.get_xticklabels(), rotation =45)  
+plt.savefig("plot/Intensidad_mensual.png", dpi=300)
+plt.show()
+
+#%%
+
 #Percentil 75 para cada mes diferenciando por criterio sis
 ################## FRIO ######################
 
