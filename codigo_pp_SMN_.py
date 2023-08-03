@@ -864,6 +864,238 @@ ax[3].legend()
 plt.show()
 
 #%% 
+'''LEO Y ABRO ARCHIVOS CORRESPONDIENTES A VARIABLE SIS OA
+Y LOS ACOMODO QUEDANDOME UN DATAFRAME CON INDICE FECHA Y COLUMNA DE VALORES SIS
+'''
+directorio = 'data_set'
+archivo2_sis_OA= 'SIS7914_ONDEFMA1090.csv'
+fname2 = os.path.join(directorio,archivo2_sis_OA)
+dfSIS_OA= pd.read_csv(fname2, sep= ';', encoding='latin-1') #/216, 1025)
+
+'''ELIMINO LAS FILAS Y COLUMNAS QUE NO NECESITO
+PARA EL "dfSIS_OA"
+'''
+dfSIS_OA= dfSIS_OA.drop(dfSIS_OA.columns[38: 1025], axis=1)
+dfSIS_OA= dfSIS_OA.drop(dfSIS_OA.index[0:3], axis=0)
+dfSIS_OA= dfSIS_OA.drop(dfSIS_OA.index[212], axis=0)
+dfSIS_OA.columns
+dfSIS_OA = dfSIS_OA.rename(columns={'Índice SIS 10-90 para la estación Octubre-Abril*       (*) Se indica el año de comienzo de la estación':'meses'})
+#creo un indice para el rango de datos, que exceptue ciertos meses del año
+def crear_indice_fechas(inicio, fin, meses_a_excluir):
+    # Generar todas las fechas desde inicio hasta fin
+    rango_fechas = pd.date_range(start=inicio, end=fin, freq='D')
+
+    # Filtrar las fechas excluyendo los meses especificados
+    indice_fechas = [fecha for fecha in rango_fechas if fecha.month not in meses_a_excluir]
+  
+    return indice_fechas
+
+# Definir el rango de fechas deseado (desde el 1 de octubre de 1979 hasta el 30 de abril de 2016)
+fecha_inicio = '1979-10-01'
+fecha_fin = '2016-04-30'
+# Definir los meses que deseamos excluir (en este caso Mayo a Septiembre)
+meses_excluir = {5, 6, 7, 8, 9}  # Usamos un conjunto para acelerar las comprobaciones
+
+# Crear el índice de fechas
+indice_fechas = crear_indice_fechas(fecha_inicio, fecha_fin, meses_excluir)
+#elimino los 29 de febrero porque no estan en la base de datos sis
+for fecha in indice_fechas:
+    if (fecha.month==2) & (fecha.day==29):
+        indice_fechas.remove(fecha)
+
+# Unificar todas las columnas del dfSIS_OA en una columna "meses" y otra columna "Valor"
+dfSIS_OA.size-212 #7844 porque le reste 212 que es la col de meses
+dfSIS_OA= pd.melt(dfSIS_OA, id_vars=['meses'], var_name='Año', value_name='Valor')
+dfSIS_OA= dfSIS_OA.drop(['Año'], axis=1)
+
+#necesito poner como indice a la lista de fechas que cree 
+dfSIS_OA.index=indice_fechas
+#luego de constatar que coincida la columna meses con el indice fechas, la elimino
+dfSIS_OA= dfSIS_OA.drop(['meses'], axis=1)
+
+#plotting
+fig = plt.subplots(figsize=(20, 5))
+sns.lineplot(data=dfSIS_OA, palette=['magenta'], linewidth=0.9, linestyle='dotted').set(title='Índice SIS para el periodo 1979-2016 considerando solo meses de Octubre a Abril',
+        xlabel='Años', ylabel='Valor del índice')
+sns.set_theme(style='white', font_scale=1)
+
+fig = plt.subplots(figsize=(20, 5))
+sns.lineplot(data=dfSIS_OA.loc['2012':'2016'], palette=['magenta'], linewidth=0.9, linestyle='dotted').set(title='Índice SIS para el periodo 2012-2016 considerando solo meses de Octubre a Abril',
+        xlabel='Años', ylabel='Valor del índice')
+sns.set_theme(style='white', font_scale=1)
+#%%
+'''
+AHORA CALCULO CLIMATOLOGIA SEPARANDO EN VALORES POSITIVOS Y VALORES NEGATIVOS DEL SIS_OA
+'''
+# Verificar si hay algún valor cero en el DataFrame
+hay_valor_cero = (dfSIS_OA == 0).any().any()
+if hay_valor_cero:
+    print("Hay al menos un valor cero en el DataFrame.")
+else:
+    print("No hay valores cero en el DataFrame.")
+
+#RETURN: No hay valores ceros en el Dataframe
+
+# FILTRAR VALORES POSITIVOS
+valores_positivos_sis_OA = dfSIS_OA[dfSIS_OA['Valor'] > 0]['Valor']
+valores_positivos_sis_OA =pd.DataFrame(valores_positivos_sis_OA)
+print("Valores positivos en la columna {}:\n{}".format('Valor', valores_positivos_sis_OA)) #3948 datos positivos
+describe_val_pos_OA=valores_positivos_sis_OA.describe().round(1)
+percentiles_valores_positivos_sis_OA=valores_positivos_sis_OA.quantile([0.9, 0.95, 0.99]).round(1)
+describe_val_pos_OA=describe_val_pos_OA.append(percentiles_valores_positivos_sis_OA)
+describe_val_pos_OA=describe_val_pos_OA.rename(columns={'Valor':'SIS-OA-Positivo'})
+describe_val_pos_OA.to_excel('plot/descripcion_valores_pos_OA.xlsx', index=True)
+
+
+# FILTRAR VALORES NEGATIVOS
+valores_negativos_sis_OA = dfSIS_OA[dfSIS_OA['Valor'] < 0]['Valor']
+valores_negativos_sis_OA =pd.DataFrame(valores_negativos_sis_OA)
+print("Valores negativos en la columna {}:\n{}".format('Valor', valores_negativos_sis_OA)) #3896 datos negativos
+describe_val_neg_OA=valores_negativos_sis_OA.describe().round(1)
+percentiles_valores_negativos_sis_OA=valores_negativos_sis_OA.quantile([0.9, 0.95, 0.99]).round(1)
+describe_val_neg_OA=describe_val_neg_OA.append(percentiles_valores_negativos_sis_OA)
+describe_val_neg_OA=describe_val_neg_OA.rename(columns={'Valor':'SIS-OA-Negativo'})
+describe_val_neg_OA.to_excel('plot/descripcion_valores_neg_OA.xlsx', index=True)
+
+#junto las 2 tablas de dataframe de estadisticos. positivas y negativas
+combined_describe_sisOA = pd.concat([describe_val_pos_OA, describe_val_neg_OA], axis=1)
+combined_describe_sisOA.to_excel('plot/tabla_estadisticos_sisOA_negypos.xlsx', index=True)
+#aca deberia graficar como con sis calido y frio
+combined_describe_sisOA=combined_describe_sisOA.drop('count', axis=0)
+#quiero mover la fila de maximo hacia el final
+#la guardo en una variable temporal
+fila_temporal=combined_describe_sisOA.iloc[6]
+# Elimina la fila del DataFrame original
+combined_describe_sisOA = combined_describe_sisOA.drop(combined_describe_sisOA.index[6])
+# Inserta la fila en la nueva posición
+combined_describe_sisOA = combined_describe_sisOA.append(fila_temporal, ignore_index=True)
+nuevos_indices= ['Mean', 'Std', 'Min', 'P25', 'P50', 'P75', 'P90', 'P95','P99', 'Max']
+combined_describe_sisOA=combined_describe_sisOA.rename(index=dict(zip(combined_describe_sisOA.index, nuevos_indices)))
+#%%
+
+indice=combined_describe_sisOA.index
+sns.set(font_scale=1.0, style="whitegrid")
+
+fig, ax = plt.subplots(figsize=(10, 6))
+fig.suptitle('Estadísticos para los meses de Octubre a Abril del índice SIS\nPeríodo 1979-2016', fontsize=12)
+ax = sns.barplot(data=combined_describe_sisOA, x=indice, y=combined_describe_sisOA["SIS-OA-Negativo"], 
+            color='dodgerblue', label="SIS-OA-Negativo", ax=ax)
+sns.barplot(data=combined_describe_sisOA, x=indice, y=combined_describe_sisOA["SIS-OA-Positivo"],
+                 color='#C79FEF', label="SIS-OA-Positivo")
+
+ax.legend(loc='lower right', fontsize=9)
+ax.set_yticks(range(-4, 6, 2))
+ax.set_ylabel('Índice SIS', fontsize=11)
+
+
+#pone etiqueta a cada barra
+# Coordenadas donde se ubicarán las anotaciones en la parte superior
+xytext_top = (0, 10)
+# Coordenadas donde se ubicarán las anotaciones en la parte inferior
+xytext_bottom = (0, -11)
+color_top= 'red'
+color_bottom= 'blue'
+for p in ax.patches:
+    if p.get_height()>0:
+        va = 'top'  # Anotación en la parte superior
+        xytext = xytext_top
+        color= color_top
+    else:
+        va = 'bottom'  # Anotación en la parte inferior
+        xytext = xytext_bottom
+        color= color_bottom
+    ax.annotate(np.round(p.get_height(),decimals=2), (p.get_x()+p.get_width()/2., 
+                                                      p.get_height()), ha='center', 
+                va=va,  xytext=xytext, textcoords='offset points', fontsize=10, color= color, fontweight='normal')
+
+plt.savefig('plot/Estadisticos_indice_sisOA.png', dpi=200)
+plt.show()
+#%%
+'''Ahora similar pero con boxplot'''
+
+# Crea una figura y dos ejes, uno para valores positivos y otro para valores negativos
+fig, (ax_positivos, ax_negativos) = plt.subplots(1, 2, sharey=True, figsize=(14,6))
+fig.suptitle('Valores positivos y negativos del índice SIS\n Octubre a Abril, Período 1979-2016', fontsize=14)
+# Grafica los boxplots para los valores positivos y negativos
+ax_positivos.boxplot(valores_positivos_sis_OA , vert=False, flierprops={'marker':'x'}, 
+                     showfliers= False, showmeans=True, meanline= True, notch=True, patch_artist=True,
+                     boxprops=dict(facecolor='#C79FEF', color='black'), 
+                     meanprops= dict(linestyle='-', linewidth=1.5, color='green'))
+ax_negativos.boxplot(valores_negativos_sis_OA , vert=False, flierprops={'marker':'x'}, 
+                     showfliers= False, showmeans=True, meanline= True, notch=True, patch_artist=True,
+                     boxprops=dict(facecolor='dodgerblue', color='black'),
+                     meanprops= dict(linestyle='-', linewidth=1.5, color='green'))
+
+
+# Establece el título y etiquetas del gráfico
+ax_positivos.set_title('Valores Positivos', fontsize=12)
+ax_positivos.set_xlabel('Índice SIS')
+ax_positivos.set_ylabel(' ')
+ax_positivos.set_yticklabels([' ', ' '])
+
+
+ax_negativos.set_title('Valores Negativos', fontsize=12)
+ax_negativos.set_xlabel('Índice SIS')
+ax_negativos.set_ylabel(' ')
+
+ 
+# Muestra el gráfico
+plt.tight_layout() #asegura que este todo bien ajustado
+plt.savefig('plot/boxplot_indice_SIS.png', dpi=300)
+plt.show()
+#%%
+archivo3_sis_MS= 'SIS8015_MJJAS1090.csv'
+fname3 = os.path.join(directorio,archivo3_sis_MS)
+dfSIS_MS= pd.read_csv(fname3, sep= ';', encoding='latin-1') #(156, 37)
+
+'''ELIMINO LAS FILAS Y COLUMNAS QUE NO NECESITO
+PARA EL "dfSIS_MS"
+'''
+dfSIS_MS= dfSIS_MS.drop(dfSIS_MS.index[0:3], axis=0)
+dfSIS_MS.columns
+dfSIS_MS = dfSIS_MS.rename(columns={'Índice SIS 10-90 para la estación Mayo-Septiembre':'meses'})
+#creo un indice para el rango de datos, que exceptue ciertos meses del año
+'''def crear_indice_fechas(inicio, fin, meses_a_excluir):
+    # Generar todas las fechas desde inicio hasta fin
+    rango_fechas = pd.date_range(start=inicio, end=fin, freq='D')
+
+    # Filtrar las fechas excluyendo los meses especificados
+    indice_fechas = [fecha for fecha in rango_fechas if fecha.month not in meses_a_excluir]
+  
+    return indice_fechas
+'''
+# Definir el rango de fechas deseado (desde el 1 de Mayo de 1980 hasta el 30 de Septiembre de 2015)
+fecha_inicio_ms = '1980-05-01'
+fecha_fin_ms = '2015-09-30'
+# Definir los meses que deseamos excluir (en este caso e-f-m-a-o-n-d)
+meses_excluir = {1 ,2, 3, 4, 10, 11, 12}  # Usamos un conjunto para acelerar las comprobaciones
+
+# Crear el índice de fechas
+indice_fechas_ms = crear_indice_fechas(fecha_inicio_ms, fecha_fin_ms, meses_excluir)
+
+# Unificar todas las columnas del dfSIS_OA en una columna "meses" y otra columna "Valor"
+dfSIS_MS.shape #(153,37)
+dfSIS_MS.size-153 #5661 porque le reste 153 que es la col de meses-->5508
+dfSIS_MS= pd.melt(dfSIS_MS, id_vars=['meses'], var_name='Año', value_name='Valor')
+dfSIS_MS= dfSIS_MS.drop(['Año'], axis=1)
+
+#necesito poner como indice a la lista de fechas que cree 
+dfSIS_MS.index=indice_fechas_ms
+#luego de constatar que coincida la columna meses con el indice fechas, la elimino
+dfSIS_MS= dfSIS_MS.drop(['meses'], axis=1)
+
+#plotting
+fig = plt.subplots(figsize=(20, 5))
+sns.lineplot(data=dfSIS_OA, palette=['magenta'], linewidth=0.9, linestyle='dotted').set(title='Índice SIS para el periodo 1979-2016 considerando solo meses de Octubre a Abril',
+        xlabel='Años', ylabel='Valor del índice')
+sns.set_theme(style='white', font_scale=1)
+
+fig = plt.subplots(figsize=(20, 5))
+sns.lineplot(data=dfSIS_OA.loc['2012':'2016'], palette=['magenta'], linewidth=0.9, linestyle='dotted').set(title='Índice SIS para el periodo 2012-2016 considerando solo meses de Octubre a Abril',
+        xlabel='Años', ylabel='Valor del índice')
+sns.set_theme(style='white', font_scale=1)
+#%%
+
 '''
   
 INTENTOS FALLIDOS A RESOLVER - DEBERIA HACERLO CON BARRA Y COMPARAR 
