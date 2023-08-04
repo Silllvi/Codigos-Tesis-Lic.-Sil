@@ -599,7 +599,7 @@ clrs2 = ['lightblue' if (4< x < 10) else 'pink' for x in filtro_2.mes]
 clrs3 = ['lightblue' if (4< x < 10) else 'pink' for x in filtro_3.mes]
 #add DataFrames to subplots
 axes[0].plot(filtro_1.index, filtro_1['prcp'], 'o', color='red')
-axes[0].fill_between(filtro_1.index, filtro_1['prcp'], color='maroon', linewidth=1.5)
+axes[0].fill_between(filtro_1.index, filtro_1['prcp'], color=clrs1, linewidth=1.5)
 axes[1].plot(filtro_2.index, filtro_2['prcp'], 'o', color='red')
 axes[1].fill_between(filtro_2.index, filtro_2['prcp'], color='maroon', linewidth=1.5)
 axes[2].plot(filtro_3.index, filtro_3['prcp'], 'o', color='red')
@@ -719,20 +719,41 @@ colors= ['grey' if (4< s < 10) else 'red' for s in mes_int]
 fig, ax = plt.subplots(figsize=(50,12))
 sns.set_style('white')
 ax=sns.barplot(x=intensidad_mensual.index, y='prcp',
-               data=intensidad_mensual, palette=colors)
+               data=intensidad_mensual,# hue='periodo', hue_order=["c", "f"], #cambiado
+               palette=colors)
 
 plt.title('Ezeiza SMN - Intensidad de precipitación mensual', fontsize= 28)
 #plotting INTENSIDAD
 ax = plt.gca()
-ax.legend(labels=["SIS FRÍO","SIS CÁLIDO"], fontsize='20')
+ax.legend(labels=["SIS-MS","SIS-OA"], fontsize='20')
 ax.xaxis.set_major_locator(ticker.MultipleLocator(30))
 
 ax.tick_params(axis='both',labelsize=22)
 ax.set_xlabel("Años", fontsize= 26)
 ax.set_ylabel("Intensidad (mm/día)", fontsize= 26)
 ax.grid(True)
+''' ESTA ES LA QUE VA
+fig, ax = plt.subplots(figsize=(50, 12))
+sns.set_style('white')
+ax = sns.barplot(x=intensidad_mensual.index.strftime('%Y-%m'), y='prcp',
+                 data=intensidad_mensual, palette=colors)
 
-plt.setp(ax.get_xticklabels(), rotation =45)  
+plt.title('Ezeiza SMN - Intensidad de precipitación mensual', fontsize=28)
+# plotting INTENSIDAD
+ax = plt.gca()
+ax.legend(labels=["SIS FRÍO", "SIS CÁLIDO"], fontsize='20')
+ax.xaxis.set_major_locator(ticker.MultipleLocator(30))
+
+ax.tick_params(axis='both', labelsize=22)
+ax.set_xlabel("Años", fontsize=26)
+'''
+#ax.set_xticklabels(intensidad_mensual['Fecha'])
+
+#plt.setp(ax.get_xticklabels(), rotation=45)
+
+
+
+  
 plt.savefig("plot/Intensidad_mensual.png", dpi=300)
 plt.show()
 
@@ -870,7 +891,7 @@ Y LOS ACOMODO QUEDANDOME UN DATAFRAME CON INDICE FECHA Y COLUMNA DE VALORES SIS
 directorio = 'data_set'
 archivo2_sis_OA= 'SIS7914_ONDEFMA1090.csv'
 fname2 = os.path.join(directorio,archivo2_sis_OA)
-dfSIS_OA= pd.read_csv(fname2, sep= ';', encoding='latin-1') #/216, 1025)
+dfSIS_OA= pd.read_csv(fname2, sep= ',', encoding='latin-1') #/216, 1025)
 
 '''ELIMINO LAS FILAS Y COLUMNAS QUE NO NECESITO
 PARA EL "dfSIS_OA"
@@ -1046,7 +1067,7 @@ plt.show()
 #%%
 archivo3_sis_MS= 'SIS8015_MJJAS1090.csv'
 fname3 = os.path.join(directorio,archivo3_sis_MS)
-dfSIS_MS= pd.read_csv(fname3, sep= ';', encoding='latin-1') #(156, 37)
+dfSIS_MS= pd.read_csv(fname3, sep= ',', encoding='latin-1') #(156, 37)
 
 '''ELIMINO LAS FILAS Y COLUMNAS QUE NO NECESITO
 PARA EL "dfSIS_MS"
